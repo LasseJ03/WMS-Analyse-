@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>WMS Pricing-Analyse 2026 — Mantis LVS vs. 20 Wettbewerber</title>
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;font-size:13px;background:#f5f6fa;color:#111827;line-height:1.6}
+  a{color:#2563eb}
+
+  /* Layout */
+  .page{max-width:960px;margin:0 auto;padding:24px 20px 48px}
+
+  /* Cover */
+  .cover{background:#1e3a5f;color:#fff;border-radius:12px;padding:28px 32px;margin-bottom:20px}
+  .cover-label{font-size:10px;letter-spacing:2.5px;text-transform:uppercase;color:#60a5fa;margin-bottom:10px;font-weight:600}
+  .cover h1{font-size:24px;font-weight:600;margin-bottom:6px}
+  .cover p{font-size:13px;color:rgba(255,255,255,.7);margin-bottom:16px}
+  .cover-meta{display:flex;gap:24px;flex-wrap:wrap}
+  .mi{font-size:11.5px;color:rgba(255,255,255,.5)}
+  .mi strong{display:block;color:rgba(255,255,255,.9);font-size:12.5px;font-weight:500;margin-bottom:1px}
+
+  /* Metrics */
+  .metrics{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:20px}
+  .metric{background:#fff;border:1px solid #e5e7eb;border-radius:10px;padding:12px 16px;text-align:center}
+  .metric-val{font-size:28px;font-weight:600;line-height:1;color:#111827}
+  .metric-lbl{font-size:11px;color:#6b7280;margin-top:4px}
+  .metric.pos{background:#f0fdf4;border-color:#86efac}
+  .metric.pos .metric-val{color:#15803d}
+  .metric.neu{background:#fffbeb;border-color:#fde68a}
+  .metric.neu .metric-val{color:#b45309}
+
+  /* Tabs */
+  .tab-bar{display:flex;gap:3px;border-bottom:1.5px solid #e5e7eb;margin-bottom:16px}
+  .tab{padding:8px 16px;border:1px solid transparent;border-bottom:none;border-radius:8px 8px 0 0;background:transparent;color:#6b7280;font-size:13px;cursor:pointer;display:flex;align-items:center;gap:7px;position:relative;top:1.5px;font-family:inherit}
+  .tab:hover{background:#f9fafb;color:#374151}
+  .tab.active{background:#fff;border-color:#e5e7eb;border-bottom-color:#fff;color:#111827;font-weight:500}
+  .tab.active.t-pos{color:#15803d}
+  .tab.active.t-neu{color:#b45309}
+  .badge{font-size:11px;font-weight:600;padding:1px 7px;border-radius:99px;background:#f3f4f6;color:#6b7280}
+  .tab.active .badge{background:#e5e7eb;color:#374151}
+  .tab.active.t-pos .badge{background:#dcfce7;color:#15803d}
+  .tab.active.t-neu .badge{background:#fef9c3;color:#b45309}
+
+  /* Search */
+  .search-wrap{margin-bottom:14px}
+  .search-wrap input{width:100%;padding:9px 14px;border:1px solid #d1d5db;border-radius:8px;font-size:13px;outline:none;background:#fff;color:#111827;font-family:inherit}
+  .search-wrap input:focus{border-color:#3b82f6;box-shadow:0 0 0 3px rgba(59,130,246,.1)}
+
+  /* Cards */
+  .card{border:1px solid #e5e7eb;border-radius:10px;margin-bottom:8px;overflow:hidden;background:#fff}
+  .card.oracle-card{border-color:#fca5a5}
+  .card-header{padding:12px 16px;display:flex;align-items:center;gap:10px;cursor:pointer;background:#fff;user-select:none}
+  .card-header:hover{background:#f9fafb}
+  .card-num{font-size:11px;color:#9ca3af;min-width:22px;font-weight:600;font-variant-numeric:tabular-nums}
+  .card-info{flex:1}
+  .card-name{font-size:13.5px;font-weight:600;color:#111827}
+  .card-tier{font-size:11px;color:#9ca3af;margin-top:1px}
+  .pill{font-size:11px;font-weight:600;padding:3px 10px;border-radius:99px;white-space:nowrap}
+  .pill-pos{background:#dcfce7;color:#15803d}
+  .pill-neu{background:#fef9c3;color:#b45309}
+  .pill-neg{background:#fee2e2;color:#b91c1c}
+  .chev{width:15px;height:15px;color:#9ca3af;transition:transform .2s;flex-shrink:0}
+  .chev.open{transform:rotate(180deg)}
+
+  /* Card body */
+  .card-body{display:none;border-top:1px solid #e5e7eb}
+  .card-body.open{display:block}
+  table.dt{width:100%;border-collapse:collapse;font-size:12px;table-layout:fixed}
+  table.dt thead tr{background:#1e3a5f}
+  table.dt thead th{padding:7px 12px;text-align:left;font-size:11px;font-weight:600;color:#fff;letter-spacing:.3px}
+  table.dt thead th:first-child{width:170px}
+  table.dt tbody td{padding:7px 12px;vertical-align:top;border-bottom:1px solid #f3f4f6;word-wrap:break-word;color:#374151;font-size:12px}
+  table.dt tbody td:first-child{color:#6b7280;font-weight:600;font-size:11px}
+  table.dt tbody tr:nth-child(even){background:#f9fafb}
+  .alert-row td{background:#fff1f2!important;color:#be123c!important;font-weight:600}
+  .alert-row td:first-child{color:#9f1239!important}
+  .analysis{padding:12px 16px;font-size:12.5px;color:#1e40af;background:#eff6ff;border-left:3px solid #3b82f6;line-height:1.6}
+  .analysis strong{font-weight:600;color:#1e3a5f}
+
+  /* Empty */
+  .empty{text-align:center;padding:48px;color:#9ca3af;font-size:13px}
+
+  /* Sections */
+  .section{margin-top:32px}
+  .sec-title{font-size:18px;font-weight:600;color:#111827;margin-bottom:6px;padding-bottom:8px;border-bottom:2px solid #3b82f6;display:inline-block}
+  .sec-intro{font-size:12.5px;color:#6b7280;margin-top:8px;margin-bottom:16px}
+
+  /* Findings */
+  .findings{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:0}
+  .finding{padding:12px 14px;border-radius:8px;border-left:4px solid;font-size:12.5px;line-height:1.5}
+  .f-r{background:#fff1f2;border-color:#ef4444;color:#7f1d1d}
+  .f-y{background:#fffbeb;border-color:#f59e0b;color:#78350f}
+  .f-g{background:#f0fdf4;border-color:#22c55e;color:#14532d}
+  .fn{font-size:18px;font-weight:600;opacity:.3;display:block;margin-bottom:3px}
+
+  /* Battlecards */
+  .bc-card{border:1px solid #e5e7eb;border-radius:10px;margin-bottom:12px;overflow:hidden}
+  .bc-head{background:#1e3a5f;color:#fff;padding:12px 18px;font-size:13.5px;font-weight:600;display:flex;align-items:center;gap:9px}
+  .bc-head.danger{background:#991b1b}
+  .bc-num{background:#3b82f6;color:#fff;font-size:11px;font-weight:700;width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+  .bc-body{padding:14px 18px;font-size:13px;line-height:1.65;color:#374151}
+  .bc-body strong{color:#111827;font-weight:600}
+  .bc-gegen{margin-top:9px;font-size:11.5px;color:#9ca3af}
+  .bc-gegen strong{color:#4b5563;font-weight:500}
+
+  /* Overview table */
+  .ov-wrap{overflow-x:auto;margin-top:12px}
+  table.ov{width:100%;border-collapse:collapse;font-size:12px;min-width:700px}
+  table.ov thead tr{background:#1e3a5f}
+  table.ov thead th{padding:8px 10px;text-align:left;color:#fff;font-size:11px;font-weight:600}
+  table.ov tbody td{padding:7px 10px;border-bottom:1px solid #f3f4f6;color:#374151;word-wrap:break-word;vertical-align:middle}
+  table.ov tbody tr:nth-child(even){background:#f9fafb}
+  table.ov tbody tr:hover{background:#eff6ff}
+  .oracle-ov td{background:#fff1f2!important;color:#be123c!important;font-weight:600}
+  .vp{color:#15803d;font-weight:600}
+  .vn{color:#b45309;font-weight:600}
+
+  /* Footer note */
+  .note{font-size:11.5px;color:#9ca3af;margin-top:12px;line-height:1.6}
+  .note strong{color:#6b7280}
+  hr{border:none;border-top:1px solid #e5e7eb;margin:28px 0}
+
+  @media(max-width:600px){
+    .metrics{grid-template-columns:1fr 1fr}
+    .findings{grid-template-columns:1fr}
+    .tab{padding:7px 10px;font-size:12px}
+  }
+  @media print{
+    body{background:#fff}
+    .card-body{display:block!important}
+    .chev{display:none}
+    .tab-bar,.search-wrap{display:none}
+    .card{page-break-inside:avoid}
+    .bc-card{page-break-inside:avoid}
+    @page{margin:1.5cm;size:A4}
+  }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <!-- Cover -->
+  <div class="cover">
+    <div class="cover-label">ecovium GmbH · Vertrieb &amp; Presales</div>
+    <h1>WMS Pricing-Analyse 2026</h1>
+    <p>Mantis LVS vs. 20 WMS-Wettbewerber · Battlecard-Grundlage &amp; Angebotsargumentation DACH</p>
+    <div class="cover-meta">
+      <div class="mi"><strong>Stand</strong>Juli 2026</div>
+      <div class="mi"><strong>Zielgruppe</strong>Vertrieb, Presales, Produktmarketing</div>
+      <div class="mi"><strong>Mantis-Modelle</strong>Perpetual / Subscription / SaaS · Modular · User-basiert</div>
+    </div>
+  </div>
+
+  <!-- Metrics -->
+  <div class="metrics">
+    <div class="metric"><div class="metric-val">20</div><div class="metric-lbl">Anbieter analysiert</div></div>
+    <div class="metric pos"><div class="metric-val" id="cnt-pos">11</div><div class="metric-lbl">✅ Vorteil Mantis</div></div>
+    <div class="metric neu"><div class="metric-val" id="cnt-neu">9</div><div class="metric-lbl">⚠️ Neutral</div></div>
+    <div class="metric"><div class="metric-val" style="color:#9ca3af">0</div><div class="metric-lbl">❌ Nachteil Mantis</div></div>
+  </div>
+
+  <!-- Tabs -->
+  <div class="tab-bar">
+    <button class="tab t-all active" data-filter="all">Alle <span class="badge" id="b-all">20</span></button>
+    <button class="tab t-pos" data-filter="pos">✅ Vorteil Mantis <span class="badge" id="b-pos">11</span></button>
+    <button class="tab t-neu" data-filter="neu">⚠️ Neutral <span class="badge" id="b-neu">9</span></button>
+    <button class="tab t-neg" data-filter="neg">❌ Nachteil Mantis <span class="badge" id="b-neg">0</span></button>
+  </div>
+
+  <!-- Search -->
+  <div class="search-wrap"><input type="text" id="search" placeholder="Anbieter suchen (z.B. Oracle, SAP, EPG ...)"></div>
+
+  <!-- Cards -->
+  <div id="cards"></div>
+  <div id="empty" class="empty" style="display:none">Keine Anbieter in dieser Kategorie.</div>
+
+  <!-- Executive Summary -->
+  <div class="section">
+    <div class="sec-title">Executive summary</div>
+    <p class="sec-intro">Kernbefunde aus der Analyse aller 20 Wettbewerber — direkt einsetzbar in Ausschreibungen und Kundengesprächen.</p>
+    <div class="findings">
+      <div class="finding f-r"><span class="fn">01</span><strong>Oracle transaktionsbasiert:</strong> $50/Mo./1.000 Transaktionen öffentlich bestätigt — direktes Wachstumsrisiko. Stärkstes Battlecard-Argument für Mantis LVS.</div>
+      <div class="finding f-y"><span class="fn">02</span><strong>Enterprise-Barrieren:</strong> SAP, Manhattan, Blue Yonder mit Implementierungskosten $500k–$2M+. Mantis LVS liefert vergleichbare Funktionalität zu einem Bruchteil der Kosten.</div>
+      <div class="finding f-g"><span class="fn">03</span><strong>Deployment-Alleinstellung:</strong> Mantis LVS bietet Perpetual / Subscription / SaaS — klar differenziert von Cloud-only-Anbietern (Oracle, Manhattan Active, Storelogix).</div>
+      <div class="finding f-g"><span class="fn">04</span><strong>Öffentliche Preise nutzbar:</strong> Microsoft $210/User/Mo. (+16% Okt. 2024) · SAP ~$120/User/Mo. — belegbare TCO-Argumente im Kundengespräch.</div>
+      <div class="finding f-y" style="grid-column:span 2"><span class="fn">05</span><strong>DACH-Rivalen EPG &amp; PSI:</strong> Direkte Wettbewerber mit ähnlichem Modell — Differenzierung über Gartner-Positionierung (7× MQ), Kundennachweise und Branchentiefe führen.</div>
+    </div>
+  </div>
+
+  <hr>
+
+  <!-- Battlecards -->
+  <div class="section" style="margin-top:0">
+    <div class="sec-title">Battlecard-Argumente</div>
+    <p class="sec-intro">5 direkt einsetzbare Argumente für Ausschreibungen, Demos und Kundengespräche.</p>
+
+    <div class="bc-card">
+      <div class="bc-head"><div class="bc-num">1</div>Deployment-Wahlfreiheit — Mantis LVS bietet als einer der wenigen Anbieter alle 3 Modelle</div>
+      <div class="bc-body">Die Mehrheit der Wettbewerber ist auf ein Deployment-Modell festgelegt: Oracle, Manhattan Active und Storelogix bieten ausschließlich Cloud/SaaS. SAP EWM ist primär On-Premises. Mantis LVS bietet <strong>Perpetual, Subscription oder SaaS</strong> — je nach IT-Strategie, Regulierungsanforderung oder Budget.<br><br><em>Frage an den Kunden: „Wie viel Kontrolle möchten Sie über Ihre WMS-Infrastruktur behalten?"</em>
+      <div class="bc-gegen"><strong>Besonders wirksam gegen:</strong> Oracle WMS Cloud, Manhattan Active WM, Blue Yonder, Storelogix</div></div>
+    </div>
+
+    <div class="bc-card" style="border-color:#fca5a5">
+      <div class="bc-head danger"><div class="bc-num" style="background:#ef4444">2</div>Kein transaktionsbasiertes Pricing — Wachstum kostet nichts extra</div>
+      <div class="bc-body">Oracle WMS Cloud berechnet <strong>$50/Monat pro 1.000 Warehouse Transactions</strong> (öffentlich bestätigt). Jede Effizienzsteigerung, jeder neue Kanal, jeder saisonale Peak erhöht sofort die Lizenzkosten. Mantis LVS hat kein transaktions- oder auftragspositionsbasiertes Modell — der Preis bleibt vorhersehbar.<br><br><strong>Konkrete Rechnung:</strong> 5.000 Transaktionen/Tag = ca. $225.000/Jahr allein für Oracle-Lizenzen.
+      <div class="bc-gegen"><strong>Besonders wirksam gegen:</strong> Oracle WMS Cloud (öffentlich bestätigt), Blue Yonder Order Management, Tecsys SaaS</div></div>
+    </div>
+
+    <div class="bc-card">
+      <div class="bc-head"><div class="bc-num">3</div>Multi-Year-TCO-Vorteil gegenüber Enterprise-Anbietern</div>
+      <div class="bc-body">SAP EWM, Manhattan und Blue Yonder: Implementierungskosten $500.000–$2.000.000+, SAP-Wartung 17–22% p.a. Mantis LVS liefert vergleichbare Tier-1-WMS-Funktionalität bei einem Bruchteil dieser Kosten. Ergänzend: Microsoft D365 SCM erhöhte seine Preise Oktober 2024 einseitig um <strong>+16%</strong>. Mantis LVS gibt mehrjährig planbare Kosten ohne das Risiko einseitiger Preiserhöhungen.
+      <div class="bc-gegen"><strong>Besonders wirksam gegen:</strong> SAP EWM, Manhattan Associates, Blue Yonder, Microsoft D365 SCM</div></div>
+    </div>
+
+    <div class="bc-card">
+      <div class="bc-head"><div class="bc-num">4</div>Best-of-Breed WMS — keine Hardware- oder ERP-Abhängigkeit</div>
+      <div class="bc-body">Dematic und Mecalux bündeln ihr WMS mit eigener Hardware (MHE, Regalanlagen). Infor WMS ist tief ins Infor-ERP-Ökosystem eingebettet. Mantis LVS ist <strong>hardware-agnostisch und ERP-unabhängig</strong> — nahtlose Integration mit SAP, Oracle, Microsoft und allen gängigen Automatisierungstechnologien ohne Vendor Lock-in.
+      <div class="bc-gegen"><strong>Besonders wirksam gegen:</strong> Dematic, Mecalux, Infor WMS, SAP EWM</div></div>
+    </div>
+
+    <div class="bc-card">
+      <div class="bc-head"><div class="bc-num">5</div>DACH-Markt-Nähe vs. globale Anbieter mit begrenztem lokalem Support</div>
+      <div class="bc-body">Generix Group: stark in Frankreich, DACH-Ressourcen begrenzt. IFS Softeon: mitten in globaler Unternehmenstransformation (März 2026). Manhattan und Blue Yonder: primär US-zentriert. Mantis LVS / ecovium ist <strong>DACH-heimisch</strong> — deutschsprachige Teams, langjährige DACH-Referenzen, 7× Gartner Magic Quadrant WMS bestätigt.
+      <div class="bc-gegen"><strong>Besonders wirksam gegen:</strong> Generix Group, IFS Softeon, Blue Yonder, Manhattan Associates</div></div>
+    </div>
+  </div>
+
+  <hr>
+
+  <!-- Overview table -->
+  <div class="section" style="margin-top:0">
+    <div class="sec-title">Übersichtstabelle — alle 20 Wettbewerber</div>
+    <div class="ov-wrap">
+      <table class="ov">
+        <thead><tr><th style="width:20%">Anbieter</th><th style="width:25%">Preismodell-Typ</th><th style="width:17%">Deployment</th><th style="width:20%">Preisniveau</th><th style="width:18%">Vergleich</th></tr></thead>
+        <tbody>
+          <tr><td>Vinculum</td><td>SaaS / User (ab $50/Mo.)</td><td>Nur Cloud</td><td>SMB / Niedrig</td><td class="vp">✅ Vorteil Mantis</td></tr>
+          <tr><td>Dematic</td><td>Custom / User + Hardware</td><td>On-Prem + Cloud</td><td>Enterprise / Hoch</td><td class="vp">✅ Vorteil Mantis</td></tr>
+          <tr><td>SnapFulfil (Synergy)</td><td>SaaS + Perpetual / User</td><td>Cloud + On-Prem</td><td>Mid-Market / Mittel</td><td class="vn">⚠️ Neutral</td></tr>
+          <tr><td>Mecalux Easy WMS</td><td>Sub + Perpetual / User</td><td>On-Prem + SaaS</td><td>Mid-Market / Mittel</td><td class="vn">⚠️ Neutral</td></tr>
+          <tr><td>Made4net</td><td>Cloud-SaaS / User</td><td>Cloud + On-Prem</td><td>Mid-Market / Mittel</td><td class="vn">⚠️ Neutral</td></tr>
+          <tr><td>Generix Group</td><td>Sub / User + Standorte</td><td>SaaS + On-Prem</td><td>Mid-Market / Mittel</td><td class="vp">✅ Vorteil Mantis</td></tr>
+          <tr><td>IFS Softeon</td><td>Hybrid / User + Transaktion</td><td>Cloud-native</td><td>Enterprise / Hoch</td><td class="vp">✅ Vorteil Mantis</td></tr>
+          <tr><td>Logistics Reply</td><td>Projektbasiert</td><td>On-Prem + Cloud</td><td>Enterprise / Sehr Hoch</td><td class="vp">✅ Vorteil Mantis</td></tr>
+          <tr><td>Infor WMS</td><td>SaaS / Named User (AWS)</td><td>Cloud + On-Prem</td><td>Mid-Market / Mittel</td><td class="vn">⚠️ Neutral</td></tr>
+          <tr class="oracle-ov"><td>⚠️ Oracle WMS Cloud</td><td>TRANSAKTIONSBASIERT ($50/1.000 Tx)</td><td>Nur Cloud</td><td>Enterprise / Sehr Hoch</td><td>✅ Vorteil Mantis</td></tr>
+          <tr><td>SAP EWM</td><td>Named User (~$120/Mo.)</td><td>On-Prem + Cloud</td><td>Enterprise / Sehr Hoch</td><td class="vp">✅ Vorteil Mantis</td></tr>
+          <tr><td>Infios / Körber</td><td>User + Modular</td><td>On-Prem + SaaS</td><td>Mid/Enterprise / Hoch</td><td class="vn">⚠️ Neutral</td></tr>
+          <tr><td>Blue Yonder</td><td>User + Transaktion (OM)</td><td>Cloud-native</td><td>Enterprise / Sehr Hoch</td><td class="vp">✅ Vorteil Mantis</td></tr>
+          <tr><td>Manhattan Associates</td><td>Named User / nur SaaS (Active)</td><td>Nur Cloud</td><td>Enterprise / Sehr Hoch</td><td class="vp">✅ Vorteil Mantis</td></tr>
+          <tr><td>Microsoft D365 SCM</td><td>Named User ($210/Mo. öffentlich)</td><td>SaaS + On-Prem</td><td>Mid/Enterprise / Hoch</td><td class="vp">✅ Vorteil Mantis</td></tr>
+          <tr><td>Tecsys</td><td>Perpetual + SaaS / User</td><td>On-Prem + Cloud</td><td>Mid-Market / Mittel-Hoch</td><td class="vn">⚠️ Neutral</td></tr>
+          <tr><td>EPG (LFS WMS)</td><td>User + Modular</td><td>On-Prem + SaaS</td><td>Mid-Market / Mittel</td><td class="vn">⚠️ Neutral</td></tr>
+          <tr><td>ProLogistik</td><td>User + Projekt</td><td>On-Prem + SaaS</td><td>SMB/Mid-Market / Mittel</td><td class="vn">⚠️ Neutral</td></tr>
+          <tr><td>Storelogix</td><td>SaaS Flatrate / User</td><td>Nur Cloud</td><td>SMB / Niedrig</td><td class="vp">✅ Vorteil Mantis</td></tr>
+          <tr><td>PSI (PSIwms)</td><td>User + Modular (3 Editionen)</td><td>On-Prem + SaaS</td><td>Mid-Market / Mittel</td><td class="vn">⚠️ Neutral</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="note"><strong>Quellen:</strong> Gartner Peer Insights, Capterra, G2, GetApp, SelectHub, ITQlick, TEC, SourceForge, Vendor-Websites, Microsoft- &amp; Oracle-Preislisten (Stand Juli 2026) · <strong>Mantis LVS:</strong> Perpetual / Subscription / SaaS · Modular · User-basiert · Kein transaktions- oder auftragspositionsbasiertes Modell</p>
+  </div>
+
+</div><!-- /page -->
+
+<script>
+var DATA = [
+  {n:"01",name:"Vinculum (Vin eRetail WMS)",tier:"SMB / Mid-Market",v:"pos",
+   rows:[["Preismodell","SaaS-Subscription, User-basiert; Einstieg ab $50/User/Monat (ITQlick 2026); Volumen-Elemente möglich"],["Deployment","Ausschließlich SaaS/Cloud (Gartner MQ 4× 2017–2020); kein On-Premises; kein Perpetual-Kauf"],["Preisniveau","Öffentlich bestätigt: ab $50/User/Mo. (ITQlick 2026); Implementierung $10.000–$100.000+"],["TCO-Faktoren","Keine Perpetual-Option; Kosten skalieren mit Wachstum; India/Asien-Support-Fokus"]],
+   analysis:"Vinculum ist ausschließlich SaaS ohne Deployment-Wahlfreiheit. Der öffentlich bestätigte Einstieg ($50/User/Mo.) ist zwar niedrig, steigt aber mit Auftragsvolumen und User-Anzahl. Mantis LVS bietet mit drei Deployment-Modellen und modularer Lizenzierung deutlich mehr Flexibilität für wachsende DACH-Unternehmen."},
+  {n:"02",name:"Dematic (WMS / iQ Optimize)",tier:"Enterprise",v:"pos",
+   rows:[["Preismodell","Custom Pricing — User-basiert; Schätzung: $500/Mo. (1 User) bis $50.000/Mo. (100+ User) (ITQlick 2026)"],["Deployment","On-Premises und Cloud; eng an Dematic-Automatisierungshardware gebunden; kein Perpetual für Neukunden"],["Preisniveau","Nicht öffentlich. Implementierung $20.000–$50.000+; Enterprise ab $100.000/Mo.; Großunternehmen mit Automation"],["TCO-Faktoren","Starker Hardware-Lock-in (Conveyor, Shuttles, AS/RS); begrenzte Anpassbarkeit lt. Reviews"]],
+   analysis:"Dematic ist primär ein MHE-Automatisierungsanbieter — das WMS ist tief in proprietäre Hardware-Ökosysteme eingebettet. Reviews kritisieren begrenzte Anpassbarkeit und Integrationsherausforderungen. Mantis LVS ist hardware-agnostisch und ERP-unabhängig — deutlich flexibler im Multi-Vendor-Umfeld."},
+  {n:"03",name:"Synergy Logistics (SnapFulfil)",tier:"SMB / Mid-Market",v:"neu",
+   rows:[["Preismodell","SaaS-Subscription (User-basiert, nach Standorten + Funktionsumfang); Einstieg ab $4.000/Mo. (SourceForge 2026); Perpetual-Option verfügbar"],["Deployment","Cloud/SaaS + On-Premises (Perpetual); 3 Tiers: Start, Pro, Enterprise"],["Preisniveau","Nicht öffentlich offiziell. Marktindikation: ab $4.000/Mo.; '45-Tage-Deployment'; Tier-1 zu Mid-Market-Preis"],["TCO-Faktoren","Hardware, Implementierung und Wartung separat; Perpetual-Option für Kapitalisierung verfügbar"]],
+   analysis:"SnapFulfil bietet ähnliche Deployment-Flexibilität wie Mantis LVS (SaaS + Perpetual) und positioniert sich als günstige Tier-1-Alternative. Das 45-Tage-Deployment ist ein starkes Argument. Im DACH-Markt jedoch deutlich weniger präsent — Sprach- und Supportressourcen sind UK/US-zentriert."},
+  {n:"04",name:"Mecalux (Easy WMS)",tier:"SMB / Mid-Market / Enterprise",v:"neu",
+   rows:[["Preismodell","Tiered Subscription — User-basiert + Modulanzahl; 3 Pläne (Pro, Advanced, Enterprise); SaaS und On-Premises"],["Deployment","SaaS (Microsoft Azure) + On-Premises; kein öffentliches Pricing — 'Contact vendor for tailored pricing' (TEC 2025)"],["Preisniveau","Nicht öffentlich. Review: 'Too high cost'; Gartner MQ 2026 5× dabei; 1.200+ Installationen in 36 Ländern"],["TCO-Faktoren","Hardware-Bundling möglich; Customizing-Kosten bei Nicht-Standardprozessen; Gartner MQ 5× in Folge"]],
+   analysis:"Mecalux bietet vergleichbare Deployment-Flexibilität und modulares Pricing — ähnlich Mantis LVS. Der wesentliche Unterschied: Mecalux ist primär ein Regalsystem-/Intralogistik-Anbieter; das WMS ist auf eigene Lageranlagen optimiert, was bei Nicht-Mecalux-Hardware Anpassungskosten verursacht."},
+  {n:"05",name:"Made4net (WarehouseExpert)",tier:"SMB / Mid-Market / Enterprise",v:"neu",
+   rows:[["Preismodell","Cloud-SaaS (User-basiert, monatlich) + On-Premises optional; modular; kein öffentliches Pricing"],["Deployment","Cloud-first (SaaS), On-Premises möglich; typische Implementierung 20 Wochen; seit 2023 Teil von IKEA/Ingka Investments"],["Preisniveau","Nicht öffentlich. Indikation: ab ~$500–$1.000/Mo. (SelectHub); Implementierung $150k–$500k+ für Mid-Market"],["TCO-Faktoren","IKEA/Ingka-Übernahme 2023 — Unklarheit über langfristige Neutralität für Nicht-IKEA-Kunden"]],
+   analysis:"Made4net ist ein solider Mid-Market-Wettbewerber mit schneller Cloud-Implementierung. Die IKEA/Ingka-Übernahme 2023 wirft Fragen zur strategischen Neutralität auf — werden Nicht-IKEA-Kunden langfristig gleich priorisiert? Mantis LVS profitiert von klarer Best-of-Breed-Unabhängigkeit."},
+  {n:"06",name:"Generix Group (WMS)",tier:"Mid-Market / Enterprise",v:"pos",
+   rows:[["Preismodell","Subscription — User-Anzahl + Standorte + Module; keine öffentliche Preisliste; SaaS-first"],["Deployment","SaaS/Cloud primär; On-Premises möglich; starker Frankreich/Westeuropa-Fokus; DACH-Präsenz begrenzt"],["Preisniveau","Nicht öffentlich. Indikativ $2.000–$10.000/Mo. jährlich (SelectHub); Customizing treibt Kosten erheblich"],["TCO-Faktoren","Gartner-Reviews: 'signifikante Zusatzinvestition' für nicht-standardisierte Prozesse; DACH-Support begrenzt"]],
+   analysis:"Generix ist im französischsprachigen Raum stark, im DACH-Markt jedoch mit begrenzter Präsenz und dünnem lokalem Support. Nicht-standardisierte Prozesse erfordern laut Gartner-Reviews teure individuelle Entwicklungen. Mantis LVS mit ecoviums DACH-Fokus und modularer Konfigurierbarkeit ist klar im Vorteil."},
+  {n:"07",name:"IFS Softeon (ehem. Softeon WMS)",tier:"Enterprise",v:"pos",
+   rows:[["Preismodell","Hybrid — User-basiert + Standortgröße + optional transaktionsbasierte Elemente; kein öffentliches Pricing"],["Deployment","Cloud-native (SaaS); On-Premises verfügbar; seit März 2026 vollständig in IFS SE integriert"],["Preisniveau","Nicht öffentlich. Enterprise-Segment; Abhängigkeit vom IFS-Gesamtpaket wächst nach Konzernintegration"],["TCO-Faktoren","Konzernintegration März 2026: Produktroadmap, Support und Preismodelle im Wandel; Upgrade-Unsicherheit"]],
+   analysis:"IFS Softeon befindet sich seit März 2026 in einer umfassenden Unternehmenstransformation. Preismodelle, Supportstrukturen und Roadmaps sind in Bewegung. Mantis LVS bietet die Stabilität eines seit über 30 Jahren eingespielten WMS ohne Konzern-Integrations-Unsicherheit."},
+  {n:"08",name:"Logistics Reply (WMS)",tier:"Enterprise / 3PL",v:"pos",
+   rows:[["Preismodell","Projektbasiert / individuell; kein öffentliches Pricing; Integrator-Modell mit hohem Professional-Services-Anteil"],["Deployment","On-Premises und Cloud; stark beratungs- und projektlastige Implementierungen"],["Preisniveau","Nicht öffentlich. Enterprise-Segment; Implementierungskosten dominant; wenig Standardisierung"],["TCO-Faktoren","Hohe Consulting-Abhängigkeit (Reply-Konzern); Projektkosten übersteigen typisch Lizenzkosten"]],
+   analysis:"Logistics Reply agiert mehr als Systemintegrator denn als klassischer WMS-Produktanbieter. Lizenzkosten sind in Projektpakete eingebettet, was echte Preisvergleiche erschwert. Mantis LVS mit klar strukturiertem Preismodell bietet dem Kunden deutlich mehr Transparenz und Planbarkeit."},
+  {n:"09",name:"Infor WMS",tier:"Mid-Market / Enterprise",v:"neu",
+   rows:[["Preismodell","Named User; SaaS-Subscription (AWS-gehostet); kein öffentliches Pricing; Perpetual historisch verfügbar"],["Deployment","Cloud (AWS) + On-Premises; Subscription; stark in Infor CloudSuite-Ökosystem eingebettet"],["Preisniveau","Indikativ: ab $500–$1.000+/Mo. Einstieg (ITQlick); Enterprise deutlich höher"],["TCO-Faktoren","ERP-Lock-in: Wechsel von Infor-ERP verteuert WMS-Betrieb; UI-Kritik in Reviews ('veraltet')"]],
+   analysis:"Infor WMS ist ein starker Tier-2-Anbieter, aber die tiefe Infor-ERP-Ökosystem-Einbettung erhöht den TCO für Nicht-Infor-Kunden erheblich. Die Benutzeroberfläche gilt in Reviews als veraltet. Mantis LVS punktet mit ERP-Agnostik, modernerer Architektur und vergleichbaren Einstiegskosten."},
+  {n:"10",name:"Oracle WMS Cloud",tier:"Enterprise — ⚠️ TRANSAKTIONSBASIERT",v:"pos",alert:true,
+   rows:[["⚠️ PREISMODELL","TRANSAKTIONSBASIERT — öffentlich bestätigt: $50/Monat pro 1.000 Warehouse Transactions (Oracle Preisliste, Enterprise Edition)"],["Deployment","Ausschließlich Cloud/SaaS; kein On-Premises; Teil von Oracle Fusion Cloud SCM; keine Perpetual-Option"],["⚠️ PREISNIVEAU","Öffentlich: $50/Mo./1.000 Tx. 5.000 Tx/Tag = ~$225.000/Jahr; 10.000 Tx/Tag = ~$450.000/Jahr"],["⚠️ TCO-RISIKO","Kosten steigen direkt proportional mit Wachstum; kein Budget-Deckel; saisonale Spitzen = sofort höhere Lizenzkosten"]],
+   analysis:"Oracle WMS Cloud ist das prominenteste Beispiel für transaktionsbasiertes Pricing im WMS-Markt — und das stärkste Battlecard-Argument für Mantis LVS. Jede Wachstumsinitiative erhöht direkt die Lizenzrechnung. Mantis LVS mit fixem nutzerbasiertem Modell gibt dem Kunden Planungssicherheit unabhängig vom Transaktionsvolumen."},
+  {n:"11",name:"SAP Extended Warehouse Management (EWM)",tier:"Enterprise",v:"pos",
+   rows:[["Preismodell","Named User (SAP-Lizenzmetriken); Basic EWM in S/4HANA inkl.; Advanced EWM ~$120/User/Mo. (TEC öffentlich gelistet)"],["Deployment","On-Premises (S/4HANA) + Cloud (RISE with SAP); Subscription und Perpetual; typisch 12–18 Monate Implementierung"],["Preisniveau","~$1.500/User/Jahr (Sub) oder ~$7.000/User (Perpetual); Wartung 17–22% p.a.; Implementierung $500k–$2M+"],["TCO-Faktoren","Extrem hohe Implementierungskosten; SAP-Berater-Markt teuer; Upgrade-Komplexität erheblich"]],
+   analysis:"SAP EWM ist die Standardwahl für SAP-Vollintegration, aber mit enormen Gesamtkosten. Implementierungen von $500k bis mehreren Millionen Euro sind für den DACH-Mittelstand häufig unverhältnismäßig. Mantis LVS liefert vergleichbare Kernfunktionalität bei einem Bruchteil der Kosten — mit vollständiger SAP-Integrationsfähigkeit über Standardschnittstellen."},
+  {n:"12",name:"Infios / Körber WMS (ehem. HighJump)",tier:"Mid-Market / Enterprise",v:"neu",
+   rows:[["Preismodell","User-basiert + modular; Perpetual (historisch) und SaaS; kein öffentliches Pricing; Hybrid-Modell verfügbar"],["Deployment","On-Premises und SaaS; Hybrid möglich; Rebrand von Körber zu Infios 2024/25"],["Preisniveau","Nicht öffentlich. Schätzung: Perpetual-Einstieg $50.000–$150.000+ (ITQlick)"],["TCO-Faktoren","Usability-Kritik: 'not user friendly', 'huge learning curve' (Capterra, G2); Rebrand-Unsicherheit"]],
+   analysis:"Infios/Körber ist ein etablierter Wettbewerber mit ähnlicher Deployment-Flexibilität. Benutzerfreundlichkeit wird in Reviews konsistent kritisiert — was direkte Schulungs- und Onboarding-Kosten nach sich zieht. Das Rebranding erzeugt Marktunsicherheit. Mantis LVS bietet klarere Markenidentität und bessere Usability."},
+  {n:"13",name:"Blue Yonder WMS (ehem. JDA)",tier:"Enterprise",v:"pos",
+   rows:[["Preismodell","Hybrid — User-basiert + Transaktionsvolumen im Order Management; kein öffentliches Pricing"],["Deployment","Cloud-native (SaaS, Luminate Platform); On-Premises historisch; typisch 12–24 Monate Implementierungszeit"],["Preisniveau","Indikativ ab $100.000/Jahr (SelectHub); Enterprise-Deployments sechs- bis siebenstellig"],["TCO-Faktoren","Professional Services ≈ Jahreslizenz; transaktionale Elemente im OM skalieren mit Wachstum; US-zentrierter Support"]],
+   analysis:"Blue Yonder ist eine Tier-1-Enterprise-Plattform mit starker AI-Integration, aber exorbitanten Gesamtkosten. Implementierungen dauern 12–24 Monate. Die transaktionalen Preiskomponenten erhöhen den TCO bei Wachstum. Mantis LVS bietet vergleichbare Funktionalität deutlich schneller und kostengünstiger."},
+  {n:"14",name:"Manhattan Associates (Active WM)",tier:"Enterprise",v:"pos",
+   rows:[["Preismodell","Named User; Cloud-native Subscription; kein öffentliches Pricing; min. 20-User-Commitment"],["Deployment","Ausschließlich Cloud/SaaS (Active WM); On-Premises nur Manhattan SCALE (Altplattform); kein Perpetual"],["Preisniveau","Indikativ: SCALE ab $500/User/Mo.; Active WM $800+/User/Mo. (ITQlick); Gesamtprojekt $500k–$2M+"],["TCO-Faktoren","Eines der teuersten WMS am Markt; kein Perpetual für neueste Plattform; DACH-Support begrenzt"]],
+   analysis:"Manhattan Associates ist Marktführer in Tier-1-WMS-Funktionalität — aber zu einem Preis, der DACH-Mittelständler ausschließt. Active WM ist ausschließlich Cloud-native ohne Perpetual-Option. Mantis LVS bietet vergleichbare Kernfunktionalität für einen Bruchteil der Kosten mit echtem DACH-Support."},
+  {n:"15",name:"Microsoft Dynamics 365 SCM (WMS)",tier:"Mid-Market / Enterprise",v:"pos",
+   rows:[["Preismodell","Named User — öffentlich bestätigt: $210/User/Mo. SCM-Basismodul (Microsoft Preisliste Oktober 2024)"],["Deployment","SaaS (Azure) + On-Premises; min. 20 Full User; einseitige Preiserhöhungen durch Microsoft"],["Preisniveau","Öffentlich: $210/User/Mo. (Basis); Premium: $300/User/Mo.; DACH: ca. €206/User/Mo.; +16% Oktober 2024"],["TCO-Faktoren","Microsoft erhöht Preise einseitig; WMS-Funktionalität für komplexe Lagerbetriebe limitierter als Best-of-Breed"]],
+   analysis:"Microsoft D365 SCM bietet öffentliche Preistransparenz für direkte TCO-Vergleiche. Aber die einseitige +16%-Preiserhöhung Oktober 2024 zeigt das Preisrisiko. Die WMS-Funktionalität innerhalb D365 SCM ist für komplexe Lagerbetriebe deutlich flacher als ein dediziertes Best-of-Breed-WMS wie Mantis LVS."},
+  {n:"16",name:"Tecsys (Elite WMS / Omni WMS)",tier:"Mid-Market / Enterprise",v:"neu",
+   rows:[["Preismodell","Perpetual (öffentlich ab $50.000 gelistet) + SaaS-Subscription (User-basiert + optional Transaktionsvolumen)"],["Deployment","On-Premises Perpetual + Cloud SaaS; Hybrid möglich; stark im Healthcare/Distribution Nordamerika"],["Preisniveau","Perpetual-Einstieg öffentlich ab $50.000; SaaS User-basiert; Implementierung $50.000–$200.000+"],["TCO-Faktoren","Capterra-Review: 'add up quickly' bei Lizenz + Wartung; SaaS kann Transaktionskomponenten enthalten; begrenzte DACH-Präsenz"]],
+   analysis:"Tecsys bietet ähnliche Deployment-Wahlfreiheit wie Mantis LVS (Perpetual + SaaS). Die optionalen Transaktionskomponenten in der SaaS-Variante sollten im DACH-Salesgespräch gezielt hinterfragt werden. Im DACH-Markt kaum präsent — der Healthcare/Distribution-Fokus ist nordamerikanisch."},
+  {n:"17",name:"EPG (LFS WMS / EPG ONE)",tier:"SMB / Mid-Market / Enterprise",v:"neu",
+   rows:[["Preismodell","Modular + User-basiert; Subscription (SaaS) + On-Premises; kein öffentliches Pricing; DACH-Kernmarkt"],["Deployment","Cloud/SaaS + On-Premises; Hybrid; Boppard (Deutschland); Gartner MQ 2026 gelistet"],["Preisniveau","Nicht öffentlich. Gartner nennt EPG explizit als Anbieter mit 'competitive pricing and TCO'"],["TCO-Faktoren","Gartner: 'extensive configurability' als Kostenvorteil; 1.600+ Kunden; starke DACH-Präsenz"]],
+   analysis:"EPG ist der direkteste DACH-Rivale für Mantis LVS mit nahezu identischer Positionierung. Gartner nennt EPG explizit mit wettbewerbsfähigem TCO. Differenzierung muss über Gartner-Positionierung (7× MQ vs. EPG), konkrete Kundenergebnisse und internationale Skalierungsfähigkeiten geführt werden."},
+  {n:"18",name:"ProLogistik Group (pLG WMS)",tier:"SMB / Mid-Market",v:"neu",
+   rows:[["Preismodell","Projektbasiert / User-basiert; On-Premises + Cloud-SaaS ('proLogistik NEO'); kein öffentliches Pricing"],["Deployment","On-Premises + Cloud-SaaS; Hardware-Bundling typisch; Marktführer ERP-unabhängige WMS DACH-Mittelstand"],["Preisniveau","Nicht öffentlich. Mittelstandsorientiert; Hardware-Bundling erhöht Gesamtpaket; inhomogenes Portfolio"],["TCO-Faktoren","Eigene Terminals/Hardware erhöhen TCO; Produktportfolio durch Zukäufe 2021–2024 heterogen"]],
+   analysis:"ProLogistik ist als 'Marktführer für ERP-unabhängige WMS im DACH-Mittelstand' ein direkter Wettbewerber. Die aggressive Akquisitionsstrategie hat das Portfolio heterogenisiert. Mantis LVS punktet mit klar gereifter Produktstrategie und reiner Software-Fokussierung ohne Hardware-Bundling-Abhängigkeit."},
+  {n:"19",name:"Storelogix (common solutions GmbH)",tier:"SMB",v:"pos",
+   rows:[["Preismodell","SaaS Flatrate — User-basiert; alle Funktionen inklusive (kein Modulpricing); Tages- und Monatslizenzen möglich"],["Deployment","Ausschließlich SaaS/Cloud; kein On-Premises; kein Perpetual; 6 Wochen Implementierungszeit; nur DACH"],["Preisniveau","Nicht öffentlich; transparentes Flatrate-Modell; SMB-fokussiert; nur DACH"],["TCO-Faktoren","Keine Perpetual-Option; kein Ownership-Vorteil bei Wachstum; begrenzte internationale Skalierbarkeit"]],
+   analysis:"Storelogix ist ein DACH-SMB-Newcomer mit einfachem Flatrate-SaaS-Modell. Für wachsende Unternehmen fehlt Deployment-Flexibilität (kein Perpetual, kein On-Prem) und Enterprise-Funktionsumfang. Mantis LVS ist klar im Vorteil für Unternehmen, die über das SMB-Segment skalieren wollen."},
+  {n:"20",name:"PSI (PSIwms)",tier:"Mid-Market / Enterprise",v:"neu",
+   rows:[["Preismodell","Modular — User-basiert + Modulumfang; 3 Editionen (GO, FLEX, PRO); SaaS + On-Premises; Upgrade-as-a-Service (UaaS)"],["Deployment","On-Premises + SaaS; UaaS = kontinuierliches Upgrade-Modell; DACH-Kernmarkt (Berlin); Fraunhofer-validiert"],["Preisniveau","Nicht öffentlich. Mid-Market/Enterprise; Gartner MQ 2026; Referenzen: Würth Elektronik, Kärcher"],["TCO-Faktoren","UaaS = Innovation ohne große Release-Projekte, aber erhöhte Subscription-Abhängigkeit; ähnlicher Lizenzansatz wie Mantis"]],
+   analysis:"PSIwms ist neben EPG der direkteste DACH-Konkurrent für Mantis LVS im Mid-Market. Das UaaS-Modell ist innovativ. Beide Anbieter haben ähnliche Deployment-Wahlfreiheit und DACH-Verankerung. Differenzierung liegt in der 7-fachen Gartner-MQ-Bestätigung, der Markthistorie (seit 1990) und internationaler Skalierungsfähigkeit."}
+];
+
+var LABEL={pos:"✅ Vorteil Mantis",neu:"⚠️ Neutral",neg:"❌ Nachteil Mantis"};
+var PILL={pos:"pill pill-pos",neu:"pill pill-neu",neg:"pill pill-neg"};
+var currentFilter="all",currentSearch="";
+
+function renderCards(){
+  var c=document.getElementById("cards");
+  var e=document.getElementById("empty");
+  var f=DATA.filter(function(d){
+    return(currentFilter==="all"||d.v===currentFilter)&&(!currentSearch||d.name.toLowerCase().indexOf(currentSearch)!==-1||d.tier.toLowerCase().indexOf(currentSearch)!==-1);
+  });
+  if(!f.length){c.innerHTML="";e.style.display="block";return;}
+  e.style.display="none";
+  c.innerHTML=f.map(function(d){
+    var rows=d.rows.map(function(r){
+      var isA=d.alert&&r[0].startsWith("⚠️");
+      return'<tr class="'+(isA?"alert-row":"")+'"><td>'+r[0]+'</td><td>'+r[1]+'</td></tr>';
+    }).join("");
+    return'<div class="card'+(d.alert?" oracle-card":"")+'"><div class="card-header"><span class="card-num">'+d.n+'</span><div class="card-info"><div class="card-name">'+d.name+'</div><div class="card-tier">'+d.tier+'</div></div><span class="'+PILL[d.v]+'">'+LABEL[d.v]+'</span><svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg></div><div class="card-body"><table class="dt"><thead><tr><th>Dimension</th><th>Befund / Einschätzung</th></tr></thead><tbody>'+rows+'</tbody></table><div class="analysis"><strong>Analyse:</strong> '+d.analysis+'</div></div></div>';
+  }).join("");
+  Array.from(c.querySelectorAll(".card-header")).forEach(function(h){
+    h.addEventListener("click",function(){
+      var b=this.nextElementSibling,cv=this.querySelector(".chev"),o=b.classList.contains("open");
+      b.classList.toggle("open",!o);cv.classList.toggle("open",!o);
+    });
+  });
+}
+
+function init(){
+  Array.from(document.querySelectorAll(".tab")).forEach(function(t){
+    t.addEventListener("click",function(){
+      currentFilter=this.getAttribute("data-filter");
+      Array.from(document.querySelectorAll(".tab")).forEach(function(x){x.classList.remove("active");});
+      this.classList.add("active");
+      renderCards();
+    });
+  });
+  var s=document.getElementById("search");
+  if(s)s.addEventListener("input",function(){currentSearch=this.value.toLowerCase();renderCards();});
+  renderCards();
+}
+
+if(document.readyState==="loading"){document.addEventListener("DOMContentLoaded",init);}else{init();}
+</script>
+</body>
+</html>
